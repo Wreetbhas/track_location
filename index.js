@@ -1,4 +1,5 @@
-var map = L.map('map').fitWorld();
+
+var map = L.map('map',{zoom:16});
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -32,7 +33,7 @@ function showPosition(position) {
                   "<br>Accuracy: "+ position.coords.accuracy + " metres" + 
                   "</h2>";*/
 
-    console.log(position.coords);
+    //console.log(position.coords);
     var lat = position.coords.latitude;
     var lon = position.coords.longitude;
     var accuracy = position.coords.accuracy;
