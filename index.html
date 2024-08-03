@@ -10,6 +10,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
+    <script src="index.js"></script>
     <title>Document</title>
     <style>
         body {
@@ -23,35 +24,8 @@
     </style>
 </head>
 <body>
-    <div id="map"></div>   
+    <div id="map"></div> 
+    
 </body>
-<script>
-    var map = L.map('map').fitWorld();
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'  
-    }).addTo(map);
-
-    map.locate({setView: true, maxZoom: 16});
-
-    function onLocationFound(e) {
-        var radius = e.accuracy;
-
-        L.marker(e.latlng).addTo(map)
-            .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-        L.circle(e.latlng, radius).addTo(map);
-    }
-
-    map.on('locationfound', onLocationFound);
-
-
-
-    function onLocationError(e) {
-        alert(e.message);
-    }
-
-    map.on('locationerror', onLocationError);
-</script>
+<script src="index.js"></script>  
 </html>
