@@ -51,6 +51,7 @@ function showPosition(position){
     lightCircle = L.circle([lat,lon], accuracy);
     locationTrackLayers.addLayer(solidCircle);
     locationTrackLayers.addLayer(lightCircle);    
+    map.panTo(new L.LatLng(lat,lon));
 }
 
 function showError(error){
