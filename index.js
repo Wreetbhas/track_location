@@ -9,7 +9,7 @@ var accuracy;
 var solidCircleOptions = {
     color: '#6203fc',
     fillColor: '#6203fc',
-    fillOpacity: 0
+    fillOpacity: 10
 }
 
 function watchLocation(){
