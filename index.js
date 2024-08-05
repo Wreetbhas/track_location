@@ -1,60 +1,59 @@
-
-var map = L.map('map',{zoom:16});
-
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'  
-}).addTo(map);
-
+var map;
+var locationTrackLayers;
+var solidCircle;
+var lightCircle;
 var watchId;
-
-function getLocation() {
-
-  const options = {
-    enableHighAccuracy: true,
-    maximumAge: 0,
-    timeout: 30000
-  };
-
-  if (navigator.geolocation) {
-    //navigator.geolocation.getCurrentPosition(showPosition,showError, options);
-    watchId = navigator.geolocation.watchPosition(showPosition,showError, options);
-
-  } else { 
-    alert("Geolocation is not supported by this browser.");
-  }
+var lat;
+var lon;
+var accuracy;
+var solidCircleOptions = {
+    color: '#6203fc',
+    fillColor: '#6203fc',
 }
 
-function showPosition(position) {
-/*
-  ele.innerHTML = "<h2>" +
-                  "Latitude: " + position.coords.latitude + 
-                  "<br>Longitude: " + position.coords.longitude + 
-                  "<br>Accuracy: "+ position.coords.accuracy + " metres" + 
-                  "</h2>";*/
+function watchLocation(){
+    const options = {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 30000
+    };
 
-    //console.log(position.coords);
-    var lat = position.coords.latitude;
-    var lon = position.coords.longitude;
-    var accuracy = position.coords.accuracy;
+    if (navigator.geolocation){
+        watchId = navigator.geolocation.watchPosition(showPosition,showError, options);
+    }
+    else { 
+        alert("Geolocation is not supported by this browser.");
+    }
 
-    var solidCircleOptions = {
-        color: '#6203fc',
-        fillColor: '#6203fc',
+}
+
+function showPosition(position){
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    accuracy = position.coords.accuracy;
+
+    if(!map){
+        map = L.map('map',{center:[lat,lon],zoom:16});
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+        solidCircle = L.circle([lat,lon], 1, solidCircleOptions);
+        lightCircle = L.circle([lat,lon], accuracy);
+        locationTrackLayers = L.layerGroup([solidCircle,lightCircle]);
+        locationTrackLayers.addTo(map);
+        return;
     }
     
-    circleCenter = [lat,lon];
-    var solidCircle = L.circle(circleCenter, 1, solidCircleOptions);
-    var lightCircle = L.circle(circleCenter, accuracy);
-
-    solidCircle.addTo(map)
-    lightCircle.addTo(map)
-    map.panTo(new L.LatLng(lat,lon));
-
-
+    locationTrackLayers.removeLayer(solidCircle);
+    locationTrackLayers.removeLayer(lightCircle);
+    solidCircle = L.circle([lat,lon], 1, solidCircleOptions);
+    lightCircle = L.circle([lat,lon], accuracy);
+    locationTrackLayers.addLayer(solidCircle);
+    locationTrackLayers.addLayer(lightCircle);    
 }
+
 function showError(error){
     alert(error.message);
 }
 
-getLocation();
+watchLocation()
